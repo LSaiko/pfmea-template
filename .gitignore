@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Generated outputs (except the committed sample)
+test_output.xlsx
+*_test.xlsx
+
+# OS
+.DS_Store
+Thumbs.db
