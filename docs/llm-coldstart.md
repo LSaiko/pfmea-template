@@ -5,12 +5,12 @@
 
 > **Integration note for this repo's actual layout.** The design below references
 > a `pfmea/` package (`generator.py`, `cli.py`, `schema.py`). The current code is
-> flat: [`pfmea.py`](../pfmea.py) is the engine + CLI, scenarios are YAML files in
+> flat: [`foremode.py`](../foremode.py) is the engine + CLI, scenarios are YAML files in
 > [`scenarios/`](../scenarios), and `export.py` renders Word/PDF. When implemented,
 > the LLM code goes in a single **`llm.py`** module, lazy-imported only when
 > `--llm-generate` is passed, exposing `draft_scenario(...) -> dict`. The drafted
 > YAML is written to `scenarios/` and then re-enters the normal
-> `pfmea.py generate` pipeline unchanged. `get_action_priority` stays the single
+> `foremode.py generate` pipeline unchanged. `get_action_priority` stays the single
 > source of truth for AP — the LLM never writes AP.
 
 ---
@@ -46,7 +46,7 @@ Auto-detect API flavor from endpoint path (`/api/generate` → Ollama; `/v1/chat
 ## 3. CLI Surface
 
 ```bash
-python pfmea.py generate \
+python foremode.py generate \
   --llm-generate \
   --describe "heat-sealing Tyvek pouches for sterile orthopedic implants" \
   --model llama3.1:8b \
@@ -64,7 +64,7 @@ python pfmea.py generate \
 | `--rag` | off | retrieval-augmented grounding from `scenarios/` |
 | `--force` | off | allow overwriting an existing scenario |
 
-Config precedence: `~/.pfmea.toml` → env (`PFMEA_LLM_ENDPOINT`, `PFMEA_LLM_MODEL`) → flags.
+Config precedence: `~/.foremode.toml` → env (`PFMEA_LLM_ENDPOINT`, `PFMEA_LLM_MODEL`) → flags.
 
 ## 4. Prompt Design
 
@@ -95,7 +95,7 @@ No vector DB needed for a small corpus. Ratings still remain DRAFT.
 `llm.draft_scenario(description, model, endpoint, scenarios_dir, use_rag) -> dict`.
 Flow: CLI parses `--llm-generate` → `draft_scenario()` → (optional) RAG retrieve →
 build prompt → call runtime → validate+annotate → write YAML + `.audit.log` → exit
-(does NOT render). Engineer edits the draft, then runs `pfmea.py generate <draft>` as
+(does NOT render). Engineer edits the draft, then runs `foremode.py generate <draft>` as
 normal. Lazy import so missing `httpx`/`jsonschema` never affects core users.
 
 ## 8. Testing

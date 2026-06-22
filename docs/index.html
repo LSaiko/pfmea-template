@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>pFMEA Generator — AIAG-VDA 2019</title>
+<title>Foremode — AIAG-VDA 2019 pFMEA Generator</title>
 <style>
   :root{
     --navy:#1F3864; --navy2:#2b4a82; --gold:#D4AF37;
@@ -72,12 +72,13 @@
 <header>
   <div class="wrap">
     <div class="tag">AIAG-VDA FMEA 4th Edition (2019) · ISO 13485 · 21 CFR 820</div>
-    <h1>pFMEA Generator</h1>
+    <h1>Foremode</h1>
+    <p style="font-size:15px;color:var(--gold);margin-bottom:10px;font-weight:600">See the failure before it ships — an AIAG-VDA 2019 pFMEA generator.</p>
     <p>Turn a plain-YAML process description into a complete, auditable Process FMEA —
        exported to <b>Excel, Word, and PDF</b> from a single source of truth.
        Action Priority and every summary metric are <b>computed, never hand-entered.</b></p>
     <div class="cta">
-      <a class="btn" href="https://github.com/LSaiko/pfmea-template">View on GitHub</a>
+      <a class="btn" href="https://github.com/LSaiko/foremode">View on GitHub</a>
       <a class="btn ghost" href="#start">Quick start</a>
     </div>
   </div>
@@ -90,7 +91,7 @@
     <div class="flow">
       <div class="node"><b>scenario.yaml</b><span>scope · failures · S/O/D · actions</span></div>
       <div class="arrow">→</div>
-      <div class="node"><b>pfmea.py</b><span>computes Action Priority<br>+ summary metrics</span></div>
+      <div class="node"><b>foremode.py</b><span>computes Action Priority<br>+ summary metrics</span></div>
       <div class="arrow">→</div>
       <div class="fan">
         <div class="pill">📊 Excel workbook (7 steps)</div>
@@ -185,21 +186,21 @@
   <div class="wrap">
     <h2>Quick start</h2>
     <p class="sub">From clone to a three-format pFMEA in four lines.</p>
-<pre>git clone https://github.com/LSaiko/pfmea-template.git &amp;&amp; cd pfmea-template
+<pre>git clone https://github.com/LSaiko/foremode.git &amp;&amp; cd foremode
 pip install -r requirements.txt
 
-python pfmea.py list                                          <span class="cmt"># see scenarios</span>
-python pfmea.py generate sterile_packaging --format all --iso14971
+python foremode.py list                                          <span class="cmt"># see scenarios</span>
+python foremode.py generate sterile_packaging --format all --iso14971
 <span class="cmt"># -> pfmea_sterile_packaging.xlsx / .docx / .pdf  (+ ISO 14971 bridge sheet)</span>
 
-python pfmea.py changelog --from old.yaml --to scenarios/cnc_femoral_stem.yaml</pre>
+python foremode.py changelog --from old.yaml --to scenarios/cnc_femoral_stem.yaml</pre>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
     pFMEA Generator · AIAG-VDA 2019 · MIT License ·
-    <a href="https://github.com/LSaiko/pfmea-template">github.com/LSaiko/pfmea-template</a><br>
+    <a href="https://github.com/LSaiko/foremode">github.com/LSaiko/foremode</a><br>
     Preliminary engineering tool — human review required before any regulatory use.
   </div>
 </footer>

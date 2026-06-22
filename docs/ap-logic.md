@@ -1,7 +1,7 @@
 # Action Priority (AP) Logic
 
 The generator computes Action Priority with `get_action_priority(s, o, d)` in
-[`pfmea.py`](../pfmea.py). It is **transparent and auditable** — when an FDA or
+[`foremode.py`](../foremode.py). It is **transparent and auditable** — when an FDA or
 notified-body auditor asks *"why is this Medium?"* the answer is one readable
 branch, not a black-box model. This is a deliberate differentiator vs. AI FMEA
 tools whose ratings are non-reproducible.

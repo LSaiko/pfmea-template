@@ -13,7 +13,7 @@ Public API
 
 # ─────────────────────────────────────────────────────────────────────────────
 # INTEGRATION
-# The following ~6-line block should be added to pfmea.py's argparse CLI
+# The following ~6-line block should be added to foremode.py's argparse CLI
 # inside the 'generate' subcommand (or as its own 'llm-draft' subcommand)
 # to wire the --llm-generate / --describe / --model / --endpoint / --rag / --force flow.
 # ─────────────────────────────────────────────────────────────────────────────
@@ -325,7 +325,7 @@ def draft_scenario(
 
     Returns
     -------
-    The validated, annotated scenario dict (ready for pfmea.py's render pipeline).
+    The validated, annotated scenario dict (ready for foremode.py's render pipeline).
     """
     if not description or not description.strip():
         raise ValueError("description must be a non-empty string")

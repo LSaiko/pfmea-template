@@ -1,17 +1,19 @@
-# pFMEA Generator — AIAG-VDA 2019 | Medical Device Quality Engineering
+# Foremode — AIAG-VDA 2019 pFMEA Generator
+
+*See the failure before it ships.*
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/)
 [![Standard: AIAG-VDA 2019](https://img.shields.io/badge/standard-AIAG--VDA%202019-darkblue)](https://www.aiag.org/)
 [![Regulatory: 21 CFR 820 | ISO 13485](https://img.shields.io/badge/regulatory-21%20CFR%20820%20%7C%20ISO%2013485-green)](https://www.fda.gov/medical-devices/quality-system-qs-regulationmedical-device-good-manufacturing-practices)
 
-**🔗 Live demo & overview: [lsaiko.github.io/pfmea-template](https://lsaiko.github.io/pfmea-template/)**
+**🔗 Live demo & overview: [lsaiko.github.io/foremode](https://lsaiko.github.io/foremode/)**
 
 A **data-driven generator** that turns a plain-YAML process description into a
 **complete, professionally formatted pFMEA** following the **AIAG-VDA FMEA 4th
 Edition (2019)** 7-step methodology — exported to **Excel, Word, and PDF** from a
 single source of truth.
 
-One engine ([`pfmea.py`](pfmea.py)), many scenarios ([`scenarios/*.yaml`](scenarios)).
+One engine ([`foremode.py`](foremode.py)), many scenarios ([`scenarios/*.yaml`](scenarios)).
 Action Priority and all summary metrics are **computed**, never hand-entered, so a
 workbook can't drift out of internal consistency.
 
@@ -73,45 +75,45 @@ a documented simplification of the full handbook table. See
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/LSaiko/pfmea-template.git
-cd pfmea-template
+git clone https://github.com/LSaiko/foremode.git
+cd foremode
 ```
 
 ### 2. Install
 
 ```bash
 # Option A — install as a command (recommended; works from any directory)
-pip install .            # adds the `pfmea` command + bundles the sample scenarios
+pip install .            # adds the `foremode` command + bundles the sample scenarios
 # add formats:  pip install ".[docs]"   (Word/PDF)    or   pip install ".[all]"
 
 # Option B — just run from the repo, no install
 pip install -r requirements.txt
 ```
 
-After Option A you can run `pfmea ...` anywhere; with Option B use `python pfmea.py ...`.
+After Option A you can run `foremode ...` anywhere; with Option B use `python foremode.py ...`.
 
 ### 3. Generate a workbook
 
 ```bash
 # List available scenarios
-python pfmea.py list
+python foremode.py list
 
 # Scaffold a brand-new scenario, then validate it
-python pfmea.py new my_process       # writes scenarios/my_process.yaml
-python pfmea.py check my_process     # validates S/O/D ranges + required fields
+python foremode.py new my_process       # writes scenarios/my_process.yaml
+python foremode.py check my_process     # validates S/O/D ranges + required fields
 
 # Generate Excel (default)
-python pfmea.py generate cnc_femoral_stem
+python foremode.py generate cnc_femoral_stem
 # Output: pfmea_aiag_vda_2019.xlsx
 
 # Generate Excel + Word + PDF, plus the ISO 14971 bridge sheet
-python pfmea.py generate sterile_packaging --format all --iso14971
+python foremode.py generate sterile_packaging --format all --iso14971
 
 # Custom output basename
-python pfmea.py generate spinal_peek_cage -o out/my_pfmea
+python foremode.py generate spinal_peek_cage -o out/my_pfmea
 
 # Diff two scenario revisions into an auditable change summary
-python pfmea.py changelog --from old.yaml --to scenarios/cnc_femoral_stem.yaml
+python foremode.py changelog --from old.yaml --to scenarios/cnc_femoral_stem.yaml
 ```
 
 Add your own scenario by copying any file in [`scenarios/`](scenarios) and editing
@@ -136,7 +138,7 @@ review. No cloud, no account — see [docs/llm-coldstart.md](docs/llm-coldstart.
 
 ```bash
 pip install ".[llm]"
-python pfmea.py draft tyvek_seal --describe "heat-sealing Tyvek pouches for sterile implants"
+python foremode.py draft tyvek_seal --describe "heat-sealing Tyvek pouches for sterile implants"
 # -> scenarios/tyvek_seal.yaml  (DRAFT — every S/O/D needs engineer review)
 ```
 
@@ -219,12 +221,12 @@ python pfmea.py draft tyvek_seal --describe "heat-sealing Tyvek pouches for ster
 ## Repository Structure
 
 ```
-pfmea-template/
-├── pfmea.py                        # The engine + CLI (list/new/check/draft/generate/changelog)
+foremode/
+├── foremode.py                        # The engine + CLI (list/new/check/draft/generate/changelog)
 ├── export.py                       # Word (.docx) + PDF renderer (also standalone)
 ├── llm.py                          # Optional offline LLM cold-start (used by `draft`)
-├── pyproject.toml                  # Packaging — `pip install .` adds the `pfmea` command
-├── test_pfmea.py / test_llm.py     # Self-checks (python test_pfmea.py)
+├── pyproject.toml                  # Packaging — `pip install .` adds the `foremode` command
+├── test_foremode.py / test_llm.py     # Self-checks (python test_foremode.py)
 ├── scenarios/
 │   ├── cnc_femoral_stem.yaml       # Sample 1: CNC Ti-6Al-4V Femoral Stem (Class III)
 │   ├── spinal_peek_cage.yaml       # Sample 2: PEEK Injection Molded Spinal Cage (Class II)
@@ -244,7 +246,7 @@ pfmea-template/
 
 Built by one developer and an AI pair-programmer — collaborators welcome. The
 scenario library is meant to grow: add a `scenarios/*.yaml` (start with
-`pfmea new <name>`, validate with `pfmea check <name>`) and open a PR. Bug fixes,
+`foremode new <name>`, validate with `foremode check <name>`) and open a PR. Bug fixes,
 new process scenarios, and renderer improvements are all fair game.
 
 > Preliminary engineering tool. Generated pFMEAs are a starting point — a qualified

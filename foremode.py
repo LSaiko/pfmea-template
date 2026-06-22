@@ -1,5 +1,5 @@
 """
-pfmea.py — data-driven AIAG-VDA 2019 pFMEA generator
+foremode.py — data-driven AIAG-VDA 2019 pFMEA generator
 ====================================================
 One engine, many scenarios. Each scenario is a YAML file under scenarios/;
 this renders any of them to a formatted Excel workbook (and, via export.py,
@@ -8,11 +8,11 @@ source data — never hand-stored — so a workbook can't drift out of internal
 consistency the way the old per-scenario scripts did.
 
 Usage:
-    python pfmea.py list
-    python pfmea.py generate cnc_femoral_stem
-    python pfmea.py generate scenarios/cnc_femoral_stem.yaml --format all
-    python pfmea.py generate sterile_packaging --iso14971 -o out/pkg
-    python pfmea.py changelog --from old.yaml --to new.yaml
+    python foremode.py list
+    python foremode.py generate cnc_femoral_stem
+    python foremode.py generate scenarios/cnc_femoral_stem.yaml --format all
+    python foremode.py generate sterile_packaging --iso14971 -o out/pkg
+    python foremode.py changelog --from old.yaml --to new.yaml
 
 Requires: openpyxl, PyYAML  (+ python-docx, reportlab for --format docx/pdf/all)
 """
@@ -350,12 +350,12 @@ def build_workbook(sc, iso14971=False):
 
 # --- new-scenario template -------------------------------------------------
 TEMPLATE = """\
-# pFMEA scenario — edit the values, then:  python pfmea.py check {name}
-#                                          python pfmea.py generate {name} --format all
+# pFMEA scenario — edit the values, then:  python foremode.py check {name}
+#                                          python foremode.py generate {name} --format all
 id: {name}
 process_name: "My Process - My Device"
 footer: "AIAG-VDA FMEA 2019  |  21 CFR 820  |  ISO 13485"
-output: pfmea_{name}
+output: foremode_{name}
 
 properties:
   title: "pFMEA - My Device (AIAG-VDA 2019)"
@@ -458,7 +458,7 @@ def cmd_list(_):
             sc = yaml.safe_load(p.read_text(encoding="utf-8"))
             print(f"  {p.stem:<24} {sc.get('process_name','')}")
     if not seen:
-        print("  (no scenarios found — create one with: pfmea new <name>)")
+        print("  (no scenarios found — create one with: foremode new <name>)")
 
 def cmd_new(args):
     target = Path("scenarios") / f"{args.name}.yaml"
@@ -466,7 +466,7 @@ def cmd_new(args):
         sys.exit(f"{target} already exists (use --force to overwrite)")
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(TEMPLATE.format(name=args.name), encoding="utf-8")
-    print(f"created {target}\n  edit it, then:  python pfmea.py check {args.name}")
+    print(f"created {target}\n  edit it, then:  python foremode.py check {args.name}")
 
 def cmd_check(args):
     sc, path = load_scenario(args.scenario)
@@ -484,13 +484,13 @@ def cmd_draft(args):
     try:
         import llm
     except ImportError:
-        sys.exit("LLM extras not available. Install with: pip install 'pfmea-generator[llm]'")
+        sys.exit("LLM extras not available. Install with: pip install 'foremode[llm]'")
     out = Path("scenarios") / f"{args.name}.yaml"
     out.parent.mkdir(parents=True, exist_ok=True)
     llm.draft_scenario(args.describe, model=args.model, endpoint=args.endpoint,
                        scenarios_dir=SCENARIOS_DIR, use_rag=args.rag,
                        out_path=out, force=args.force)
-    print(f"drafted {out} (DRAFT — review S/O/D before: python pfmea.py check {args.name})")
+    print(f"drafted {out} (DRAFT — review S/O/D before: python foremode.py check {args.name})")
 
 def cmd_generate(args):
     sc, path = load_scenario(args.scenario)

@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pfmea-generator"
+name = "foremode"
 version = "0.2.0"
-description = "Data-driven AIAG-VDA 2019 pFMEA generator — YAML in, Excel/Word/PDF out"
+description = "Foremode — data-driven AIAG-VDA 2019 pFMEA generator: YAML in, Excel/Word/PDF out"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
@@ -24,15 +24,15 @@ llm  = ["jsonschema>=4.21"]                          # offline LLM cold-start (H
 all  = ["python-docx>=1.1.0", "reportlab>=4.0.0", "jsonschema>=4.21"]
 
 [project.scripts]
-pfmea = "pfmea:main"
+foremode = "foremode:main"
 
 [project.urls]
-Homepage = "https://github.com/LSaiko/pfmea-template"
-Issues = "https://github.com/LSaiko/pfmea-template/issues"
+Homepage = "https://github.com/LSaiko/foremode"
+Issues = "https://github.com/LSaiko/foremode/issues"
 
 # Flat single-module layout: ship the modules + the bundled scenario library.
 [tool.hatch.build.targets.wheel]
-include = ["pfmea.py", "export.py", "llm.py", "scenarios/*.yaml"]
+include = ["foremode.py", "export.py", "llm.py", "scenarios/*.yaml"]
 
 [tool.hatch.build.targets.sdist]
-include = ["pfmea.py", "export.py", "llm.py", "scenarios/*.yaml", "docs", "README.md", "requirements.txt", "test_*.py"]
+include = ["foremode.py", "export.py", "llm.py", "scenarios/*.yaml", "docs", "README.md", "requirements.txt", "test_*.py"]
