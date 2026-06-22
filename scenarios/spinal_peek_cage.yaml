@@ -1,0 +1,155 @@
+id: spinal_peek_cage
+process_name: "Injection Molding - PEEK Lumbar Interbody Fusion Cage"
+footer: "AIAG-VDA FMEA 2019  |  21 CFR 820  |  ISO 13485"
+output: pfmea_spinal_peek_cage
+
+properties:
+  title: "pFMEA - PEEK Spinal Cage (AIAG-VDA 2019)"
+  subject: "Process FMEA - Class II Medical Device"
+  keywords: "pFMEA, AIAG-VDA, ISO 13485, 21 CFR 820, PEEK, Spinal Implant"
+  description: >-
+    AIAG-VDA 2019 pFMEA for Injection Molding of PEEK Lumbar Interbody Fusion Cage.
+    Class II 510(k) device.
+
+scope:
+  - ["Process Name", "Injection Molding - PEEK Lumbar Interbody Fusion Cage"]
+  - ["Scope Start", "Raw PEEK Pellet Receipt & Material Verification"]
+  - ["Scope End", "Final Dimensional Inspection & Lot Release"]
+  - ["Device Classification", "Class II - 510(k) (21 CFR 888.3070)"]
+  - ["Standard Applied", "AIAG-VDA FMEA 4th Edition 2019"]
+  - ["Regulatory Framework", "21 CFR 820 (QSR)  |  ISO 13485:2016  |  ASTM F2026"]
+  - ["Device Description", "PEEK Lumbar Interbody Fusion Cage - Spinal Implant"]
+  - ["Team Members", "Mold Engineer, Quality Engineer, Process Engineer, Supplier Quality, R&D"]
+  - ["FMEA Facilitator", "[Your Name] - Quality Engineer"]
+  - ["FMEA Number", "PFMEA-SPINE-001"]
+  - ["Revision", "Rev A"]
+  - ["Date", "auto"]
+  - ["Next Review Date", "6 months post-transfer validation"]
+  - ["Status", "Draft - Internal Review"]
+
+structure:
+  - ["Level 1 - System", "Injection Molding Cell", "Thermoplastic implant manufacturing environment"]
+  - ["Level 2 - Subsystem", "Injection Molding Press", "Melts and injects PEEK at controlled temp/pressure"]
+  - ["Level 3 - Component", "Mold Tool (Cavity/Core)", "Defines part geometry, surface finish, and tolerances"]
+  - ["Level 3 - Component", "Barrel / Screw Assembly", "Plasticizes PEEK; controls melt temperature and shear"]
+  - ["Level 3 - Component", "Hot Runner / Gate System", "Delivers melt uniformly; controls gate vestige height"]
+  - ["Level 3 - Component", "Material Handling & Drying", "Ensures PEEK moisture <0.02% before processing"]
+  - ["Level 3 - Component", "Process Controller (HMI)", "Enforces validated parameter recipe (IQ/OQ/PQ)"]
+  - ["Level 4 - Interface", "CMM / Vision Inspection Station", "Dimensional and visual verification post-mold"]
+  - ["Level 4 - Interface", "Electronic Traveler (DHR)", "Records lot, material CoA, operator, and process params"]
+
+function:
+  - ["Mold Tool (Cavity/Core)", "Form cage geometry to OD/ID and footprint tolerances per drawing; achieve Ra <= 1.6 um on endplates", "Device drawing dimensional stack; osseointegration surface spec per ASTM F2026"]
+  - ["Barrel / Screw Assembly", "Maintain PEEK melt temperature 380-400 C; prevent thermal degradation of polymer", "PEEK processing spec; material property retention per ISO 10993-1 biocompatibility"]
+  - ["Hot Runner / Gate System", "Deliver bubble-free melt shot; gate vestige height <= 0.3 mm above parting line", "Device drawing gate vestige callout; visual inspection acceptance criteria"]
+  - ["Material Handling & Drying", "Dry PEEK pellets to moisture <= 0.02% at 150 C for >= 4 hours before molding", "PEEK processing guideline; prevention of hydrolytic degradation and splay defects"]
+  - ["Process Controller (HMI)", "Lock and enforce validated parameter recipe; flag deviation >5% from setpoint", "Validated manufacturing process (IQ/OQ/PQ); 21 CFR 820.70(i) software control"]
+  - ["CMM / Vision Inspection", "Verify footprint, height, endplate geometry, and gate vestige against print tolerance", "Inspection plan IP-SPINE-002; acceptance criteria per device drawing Rev D"]
+  - ["Electronic Traveler (DHR)", "Gate operation sequence; capture material lot, CoA link, operator, and process params", "21 CFR 820.184 Device History Record; ISO 13485 7.5.3 traceability"]
+
+failures:
+  - step: "Injection Molding - Parting Line"
+    mode: "Flash / fin exceeding 0.1 mm at parting line"
+    effect: "Sharp edge risk during implant handling; potential particulate in surgical field"
+    severity: 6
+    cause: "Insufficient clamp force; worn parting line; mold damage"
+    prevention: "Clamp force setpoint in validated recipe; mold PM schedule"
+    detection: "100% visual inspection per WI-VIS-003; AQL sampling CMM"
+  - step: "Injection Molding - Geometry"
+    mode: "Outer footprint or height OOS (dimensional deviation)"
+    effect: "Implant-endplate mismatch; subsidence risk; non-union - patient harm"
+    severity: 8
+    cause: "Mold wear / thermal expansion; incorrect recipe offset; shot-to-shot variation"
+    prevention: "Recipe lock in HMI; mold qualification per OQ; SPC on critical dims"
+    detection: "CMM inspection per sample plan SP-SPINE-01; first-article 100%"
+  - step: "Material Handling"
+    mode: "Wrong PEEK grade loaded (incorrect molecular weight / filler)"
+    effect: "Incorrect mechanical properties; implant fracture or fatigue failure in vivo"
+    severity: 9
+    cause: "Manual material selection; similar pellet appearance; label misread"
+    prevention: "Material labeling SOP; operator training"
+    detection: "Visual label check only - no barcode/CoA lock (DETECTION GAP)"
+  - step: "Injection Molding - Fill"
+    mode: "Short shot / incomplete mold fill"
+    effect: "Structural porosity in load-bearing cage; fracture risk under spinal loading"
+    severity: 7
+    cause: "Insufficient injection pressure; blocked gate; material viscosity variation"
+    prevention: "Injection pressure setpoint and transfer position in validated recipe"
+    detection: "Visual inspection - porosity may be subsurface and missed (GAP)"
+  - step: "Gate / Trim"
+    mode: "Gate vestige height > 0.3 mm above parting surface"
+    effect: "Mechanical interference with endplate; surgeon re-work; particulate generation"
+    severity: 7
+    cause: "Gate freeze inconsistency; dwell time variation; manual trim variability"
+    prevention: "Dwell time in recipe; gate vestige spec on drawing"
+    detection: "First-article caliper check; periodic sampling only"
+  - step: "Injection Molding - Surface"
+    mode: "Endplate surface texture OOS (Ra > 1.6 um or peak pattern missing)"
+    effect: "Reduced bone in-growth; long-term instability and re-operation risk"
+    severity: 8
+    cause: "Worn or damaged mold texture; contamination on cavity surface; improper mold release"
+    prevention: "Mold surface inspection at PM; release agent SOP"
+    detection: "Profilometer sample check per lot - not 100% (DETECTION GAP)"
+
+risk_note: >-
+  AIAG-VDA 2019 replaces RPN (SxOxD) with Action Priority (AP: High / Medium / Low).
+  For spinal implants, an undetected material substitution (wrong PEEK grade) reaching
+  a patient represents a catastrophic fracture risk regardless of how rarely it occurs.
+  AP weights Detection gaps heavily - a D=7 with any S>=9 is automatically High priority.
+
+ratings:
+  - ["Flash / fin at parting line", 6, 4, 3]
+  - ["Outer footprint or height OOS", 8, 4, 5]
+  - ["Wrong PEEK grade loaded", 9, 3, 7]
+  - ["Short shot / incomplete fill", 7, 3, 2]
+  - ["Gate vestige height > 0.3 mm", 7, 4, 4]
+  - ["Endplate surface texture OOS", 8, 5, 7]
+
+actions:
+  - initial_ap: H
+    mode: "Wrong PEEK grade loaded"
+    action: >-
+      Implement material barcode scan at press hopper: eDHR locks out start until
+      scanned lot matches approved CoA on traveler. Certificate of Analysis auto-linked
+      to DHR. Validate per 21 CFR 820.70(i); 100% operator training before go-live.
+    owner: "Quality Engineer"
+    target: "2026-Q3"
+    revised: [9, 2, 2]
+  - initial_ap: H
+    mode: "Endplate surface texture OOS"
+    action: >-
+      Install inline profilometer at ejection station: 100% Ra measurement, SPC alert
+      at Ra > 1.4 um. Mold surface inspection added to PM checklist at every 5,000 shots.
+      Update Control Plan CP-SPINE-001 and WI-MOLD-002 Rev B.
+    owner: "Process Engineer"
+    target: "2026-Q3"
+    revised: [8, 3, 3]
+  - initial_ap: M
+    mode: "Outer footprint or height OOS"
+    action: >-
+      Add 100% vision system check for critical footprint and height at ejection.
+      Non-conforming parts automatically rejected to quarantine bin. SPC charts for
+      cavity-specific dimensional trending.
+    owner: "Quality Engineer"
+    target: "2026-Q4"
+    revised: [8, 2, 2]
+  - initial_ap: M
+    mode: "Gate vestige height > 0.3 mm"
+    action: >-
+      Add gate vestige height to mandatory first-article CMM program (currently omitted).
+      Increase periodic sampling from 1/lot to 5/lot until Cpk >= 1.67 demonstrated over 30 lots.
+    owner: "Quality Engineer"
+    target: "2026-Q4"
+    revised: [7, 3, 2]
+
+results:
+  documents:
+    - ["Control Plan", "CP-SPINE-001 Rev A", "Injection Molding - PEEK Spinal Cage Control Plan", "In Review"]
+    - ["Work Instruction", "WI-MOLD-002 Rev B", "Injection Molding Setup & Operation - PEEK Cage", "Released"]
+    - ["Inspection Plan", "IP-SPINE-002 Rev A", "CMM & Vision Inspection - Lumbar Interbody Cage", "Released"]
+    - ["IQ/OQ Protocol", "IQ-MOLD-003", "Injection Press Qualification - PEEK Processing Parameters", "Pending"]
+    - ["PQ Protocol", "PQ-SPINE-CAGE-001", "Process Validation - PEEK Cage Injection Molding Transfer", "Planned"]
+    - ["Risk Management", "RM-SPINE-2024-02", "Device Risk Management File (ISO 14971) - Fusion Cage", "In Review"]
+    - ["DFMEA", "DFMEA-SPINE-001", "Design FMEA - PEEK Lumbar Interbody Fusion Cage", "Released"]
+    - ["SOP", "SOP-QE-022", "pFMEA Creation and Maintenance Procedure", "Released"]
+  archive: "[PLM System] -> Projects -> SPINE-CAGE-TRANSFER-2024 -> FMEA -> PFMEA-SPINE-001_RevA.xlsx"

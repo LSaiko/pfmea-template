@@ -1,0 +1,159 @@
+id: sterile_packaging
+process_name: "Sterile Barrier Packaging Seal - Tyvek-Film Pouch (Class III Implants)"
+footer: "AIAG-VDA FMEA 2019  |  21 CFR 820  |  ISO 13485  |  ISO 11607"
+output: pfmea_sterile_packaging
+
+properties:
+  title: "pFMEA - Sterile Barrier Packaging (AIAG-VDA 2019)"
+  subject: "Process FMEA - Sterile Packaging / ISO 11607"
+  keywords: "pFMEA, AIAG-VDA, ISO 13485, 21 CFR 820, ISO 11607, Sterile Packaging"
+  description: >-
+    AIAG-VDA 2019 pFMEA for Tyvek-Film Pouch Heat Sealing. Supports Class III PMA
+    implants. ISO 11607-1:2019 sterile barrier process.
+
+scope:
+  - ["Process Name", "Sterile Barrier Packaging Seal - Tyvek-Film Pouch (Class III Implants)"]
+  - ["Scope Start", "Pouching / Loading of Sterilized Implant"]
+  - ["Scope End", "Sealing, Inspection, Labeling & Distribution Release"]
+  - ["Device Classification", "Class III - PMA support process (21 CFR 814)"]
+  - ["Standard Applied", "AIAG-VDA FMEA 4th Edition 2019"]
+  - ["Regulatory Framework", "21 CFR 820 (QSR)  |  ISO 13485:2016  |  ISO 11607-1:2019"]
+  - ["Device Description", "Sterile Tyvek-Film Pouch - Primary Sterile Barrier for Class III Implants"]
+  - ["Team Members", "Packaging Engineer, Quality Engineer, Sterilization Specialist, Supplier Quality"]
+  - ["FMEA Facilitator", "[Your Name] - Quality Engineer"]
+  - ["FMEA Number", "PFMEA-PKG-001"]
+  - ["Revision", "Rev A"]
+  - ["Date", "auto"]
+  - ["Next Review Date", "Annual review per SOP-QE-022 or upon process change"]
+  - ["Status", "Draft - Internal Review"]
+
+structure:
+  - ["Level 1 - System", "Sterile Packaging Line", "End-to-end sterile barrier formation and validation"]
+  - ["Level 2 - Subsystem", "Rotary Heat Sealer", "Forms hermetic seal on three open edges of Tyvek-film pouch"]
+  - ["Level 3 - Component", "Sealing Jaw / Platen", "Applies controlled heat and pressure to create seal bond"]
+  - ["Level 3 - Component", "Temperature Controller (PID)", "Maintains seal jaw within validated temperature window"]
+  - ["Level 3 - Component", "Dwell Timer", "Controls contact time for complete seal formation"]
+  - ["Level 3 - Component", "Pouch Stock (Tyvek + Film)", "Provides sterile barrier material with validated bond surface"]
+  - ["Level 3 - Component", "Operator / Packaging Technician", "Loads implant, positions pouch, initiates seal cycle"]
+  - ["Level 4 - Interface", "Seal Integrity Test Station", "Bubble emission (ASTM F2096) and peel strength verification"]
+  - ["Level 4 - Interface", "Label Applicator / eDHR", "Applies UDI label; records lot, operator, and seal params"]
+
+function:
+  - ["Rotary Heat Sealer", "Form a continuous, channel-free hermetic seal on three sides; seal width >= 6 mm per ISO 11607-1", "ISO 11607-1 Annex A: seal width and channel-defect acceptance criteria"]
+  - ["Temperature Controller (PID)", "Maintain sealing jaw at 175 +/-5 C (validated window per OQ); alarm on deviation > 3 C", "Seal OQ temperature mapping; process validation PQ-PKG-SEAL-001"]
+  - ["Dwell Timer", "Hold seal pressure for 1.2 +/-0.1 s (validated); prevent under-dwell causing weak seal", "Seal strength OQ data; minimum peel force >= 1.5 N/15 mm per ASTM F88"]
+  - ["Pouch Stock (Tyvek + Film)", "Maintain microbial barrier and seal-ability; stored per supplier IFU (humidity/temp controlled)", "ISO 11607-1 material qualification; supplier CoA per receiving SOP"]
+  - ["Operator / Packaging Tech", "Load single implant per pouch, orient correctly, position seal edge within fixture guide", "Work instruction WI-PKG-001; operator qualification and annual re-certification"]
+  - ["Seal Integrity Test Station", "Detect seal channels >1 mm via bubble emission (ASTM F2096); measure peel strength per ASTM F88", "ISO 11607-1 Annex A2.2; AQL sampling plan SP-PKG-02"]
+  - ["Label Applicator / eDHR", "Apply correct UDI label with lot/SN; capture seal temp, dwell, operator ID in DHR", "21 CFR 830 UDI; 21 CFR 820.184 DHR; ISO 13485 7.5.3 traceability"]
+
+failures:
+  - step: "Heat Sealing"
+    mode: "Incomplete / channel seal defect (> 1 mm channel)"
+    effect: "Loss of sterile barrier; microbial ingress; patient infection from non-sterile implant"
+    severity: 9
+    cause: "Jaw misalignment; pouch wrinkle in seal zone; temperature excursion; worn platen"
+    prevention: "Seal jaw alignment verification at setup; temperature setpoint validated per OQ"
+    detection: "Visual inspection per WI-VIS-004 - channels < 1 mm not reliably detected visually (GAP)"
+  - step: "Seal Integrity"
+    mode: "Pinhole or micro-leak in film layer (microbial ingress path)"
+    effect: "Sterility breach; patient infection; implant recall and field safety corrective action"
+    severity: 10
+    cause: "Film puncture from implant edge; handling damage; raw material defect"
+    prevention: "Pouch edge guard; gentle handling SOP; incoming film inspection"
+    detection: "Bubble emission test samples only (ASTM F2096) - not 100% per lot (DETECTION GAP)"
+  - step: "Temperature Control"
+    mode: "Seal temperature out of validated range (< 170 C or > 180 C)"
+    effect: "Under-seal: weak bond, field delamination risk. Over-seal: Tyvek fiber damage, barrier compromise"
+    severity: 8
+    cause: "PID controller drift; thermocouple degradation; power supply fluctuation"
+    prevention: "PID calibration per PM schedule; operator pre-shift temperature verification"
+    detection: "Process monitoring via controller display - no independent thermocouple alarm (GAP)"
+  - step: "Dwell Time"
+    mode: "Incorrect dwell time (operator override or timer fault)"
+    effect: "Under-dwell: weak seal, peel strength below 1.5 N/15 mm; sterile barrier at risk in distribution"
+    severity: 8
+    cause: "Operator bypasses timer; controller fault; recipe not locked"
+    prevention: "Timer setpoint in validated recipe; operator training"
+    detection: "Peel strength sampled 5 pouches/lot per ASTM F88 - sub-lot variation not captured"
+  - step: "Labeling"
+    mode: "UDI label / content mismatch (wrong lot or implant size on label)"
+    effect: "Incorrect device implanted; patient harm; regulatory non-conformance (21 CFR 830)"
+    severity: 8
+    cause: "Manual label selection; look-alike label stock; no barcode verification at point of use"
+    prevention: "Label control SOP; label segregation; 2-person verification"
+    detection: "Final QA label review before release - human verification only (GAP)"
+  - step: "Post-Seal Handling"
+    mode: "Package breach / seal peel during EtO sterilization or distribution transit"
+    effect: "Sterility loss at point of use; patient infection; product recall"
+    severity: 9
+    cause: "Over-stacking in sterilization load; inadequate secondary packaging cushioning"
+    prevention: "Stacking height limit in sterilization SOP; secondary packaging spec"
+    detection: "Post-EtO visual inspection (sampling only); distribution simulation testing per ASTM D4169 annual"
+
+risk_note: >-
+  AIAG-VDA 2019 replaces RPN (SxOxD) with Action Priority (AP: High / Medium / Low).
+  For sterile packaging, the consequence of an undetected seal defect is a non-sterile
+  implant reaching the patient - a catastrophic outcome regardless of defect frequency.
+  ISO 11607 requires validated sterile barrier integrity; AP prioritizes detection gaps
+  accordingly. Any Severity >= 9 failure with Detection >= 7 is automatically High priority -
+  RPN arithmetic can mask this by averaging a low Occurrence score.
+
+ratings:
+  - ["Incomplete / channel seal defect", 9, 4, 6]
+  - ["Pinhole / micro-leak in film layer", 10, 2, 8]
+  - ["Seal temperature out of range", 8, 4, 5]
+  - ["Incorrect dwell time", 8, 3, 3]
+  - ["UDI label / content mismatch", 8, 2, 4]
+  - ["Package breach during EtO / transit", 9, 3, 5]
+
+actions:
+  - initial_ap: H
+    mode: "Incomplete / channel seal defect"
+    action: >-
+      Implement 100% bubble emission test per ASTM F2096 (replacing sampling). Add
+      automated peel strength tester with SPC control chart - alert at < 1.8 N/15 mm.
+      Update Control Plan CP-PKG-001 and sampling plan SP-PKG-02. Validate test
+      equipment per IQ/OQ IQ-SIT-001.
+    owner: "Packaging Engineer + QE"
+    target: "2026-Q3"
+    revised: [9, 2, 3]
+  - initial_ap: H
+    mode: "Pinhole / micro-leak in film layer"
+    action: >-
+      Add dye penetration test per ISO 11607-1 Annex A2.2 to every batch AQL (n=32,
+      AQL 0.65). Implement incoming film inspection with pin-hole detector per incoming
+      SOP. Add implant edge guard (foam insert) to pouching fixture.
+    owner: "Quality Engineer"
+    target: "2026-Q3"
+    revised: [10, 2, 4]
+  - initial_ap: M
+    mode: "Seal temperature out of range"
+    action: >-
+      Install independent thermocouple with dual-channel alarm: feed-hold if jaw temp
+      deviates > 3 C from setpoint. Validate alarm response per OQ protocol OQ-SEAL-002.
+      Reduce PID calibration interval from 12 to 6 months.
+    owner: "Process Engineer"
+    target: "2026-Q4"
+    revised: [8, 2, 3]
+  - initial_ap: M
+    mode: "Package breach during EtO / transit"
+    action: >-
+      Add post-EtO visual inspection of all pouches before labeling (100%, not sampling).
+      Implement ASTM D4169 distribution simulation testing semi-annually (current: annual).
+      Add foam separator between pouch layers in sterilization cassette.
+    owner: "Packaging + Sterilization PE"
+    target: "2026-Q4"
+    revised: [9, 2, 3]
+
+results:
+  documents:
+    - ["Control Plan", "CP-PKG-001 Rev A", "Sterile Packaging - Heat Seal Control Plan", "In Review"]
+    - ["Work Instruction", "WI-PKG-001 Rev C", "Tyvek-Film Pouch Sealing - Setup & Operation", "Released"]
+    - ["Inspection Plan", "SP-PKG-02 Rev B", "Seal Integrity Sampling Plan - Bubble Emission & Peel Strength", "Released"]
+    - ["OQ Protocol", "OQ-SEAL-002", "Heat Sealer Temperature & Dwell Time - Operational Qualification", "In Progress"]
+    - ["PQ Protocol", "PQ-PKG-SEAL-001", "Process Validation - Sterile Packaging Transfer", "Planned"]
+    - ["Risk Management", "RM-PKG-2024-01", "Packaging Risk Management File (ISO 14971)", "In Review"]
+    - ["Sterilization PQ", "PQ-ETO-HIP-001", "EtO Sterilization Validation - Class III Implant Family", "Released"]
+    - ["SOP", "SOP-QE-022", "pFMEA Creation and Maintenance Procedure", "Released"]
+  archive: "[PLM System] -> Projects -> PKG-SEAL-TRANSFER-2024 -> FMEA -> PFMEA-PKG-001_RevA.xlsx"

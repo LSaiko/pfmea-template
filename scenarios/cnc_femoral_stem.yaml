@@ -1,0 +1,157 @@
+id: cnc_femoral_stem
+process_name: "CNC Machining - Ti-6Al-4V Femoral Stem"
+footer: "AIAG-VDA FMEA 2019  |  21 CFR 820  |  ISO 13485"
+output: pfmea_aiag_vda_2019
+
+properties:
+  title: "pFMEA - CNC Femoral Stem (AIAG-VDA 2019)"
+  subject: "Process FMEA - Class III Medical Device"
+  keywords: "pFMEA, AIAG-VDA, ISO 13485, 21 CFR 820, Ti-6Al-4V"
+  description: >-
+    AIAG-VDA 2019 pFMEA for CNC Machining of Ti-6Al-4V Femoral Stem.
+    Class III PMA device.
+
+scope:
+  - ["Process Name", "CNC Machining - Ti-6Al-4V Femoral Stem"]
+  - ["Scope Start", "Raw Ti-6Al-4V Bar Stock Receipt"]
+  - ["Scope End", "Final Dimensional Inspection / Release"]
+  - ["Device Classification", "Class III - PMA (21 CFR 814)"]
+  - ["Standard Applied", "AIAG-VDA FMEA 4th Edition 2019"]
+  - ["Regulatory Framework", "21 CFR 820 (QSR)  |  ISO 13485:2016"]
+  - ["Device Description", "Cementless Ti-6Al-4V Femoral Stem - Implantable Hip Prosthesis"]
+  - ["Team Members", "Quality Engineer, Process Engineer, Supplier Quality, R&D"]
+  - ["FMEA Facilitator", "[Your Name] - Quality Engineer"]
+  - ["FMEA Number", "PFMEA-HIP-001"]
+  - ["Revision", "Rev A"]
+  - ["Date", "auto"]
+  - ["Next Review Date", "6 months post-transfer validation"]
+  - ["Status", "Draft - Internal Review"]
+
+structure:
+  - ["Level 1 - System", "Manufacturing Cell", "CNC Machining production environment"]
+  - ["Level 2 - Subsystem", "CNC Turning Station", "Primary material removal and geometry creation"]
+  - ["Level 3 - Component", "Cutting Tool (Insert)", "Executes material removal; controls Ra and geometry"]
+  - ["Level 3 - Component", "Workholding Fixture", "Maintains part datum and prevents movement"]
+  - ["Level 3 - Component", "Coolant Delivery System", "Controls chip evacuation and thermal stability"]
+  - ["Level 3 - Component", "CNC Part Program", "Defines toolpath, feeds, speeds, and tolerances"]
+  - ["Level 3 - Component", "Operator / Setup Tech", "Executes setup, monitors process, responds to alarms"]
+  - ["Level 4 - Interface", "CMM Inspection Station", "In-process and final dimensional verification"]
+  - ["Level 4 - Interface", "Electronic Traveler (DHR)", "Enforces operation sequence and records results"]
+
+function:
+  - ["Cutting Tool (Insert)", "Remove material to achieve OD +/-0.010 mm and Ra <= 0.8 um on taper surface", "Device drawing tolerance stack; osseointegration surface finish spec"]
+  - ["Workholding Fixture", "Maintain part concentricity <0.005 mm TIR during all turning operations", "Geometric dimensioning: perpendicularity and runout callouts"]
+  - ["Coolant Delivery System", "Deliver coolant at >=50 PSI to maintain <60C tool-chip interface temperature", "Ti-6Al-4V machining process spec; tool life and metallurgical integrity"]
+  - ["CNC Part Program", "Execute validated toolpath per ECO-approved revision; enforce feed/speed limits", "Validated manufacturing process (IQ/OQ/PQ); 21 CFR 820.70(i) software control"]
+  - ["Operator / Setup Tech", "Load correct program revision, set datum offsets, perform first-article inspection", "Work instruction WI-CNC-001; operator qualification records OQR-2024"]
+  - ["CMM Inspection Station", "Verify OD, ID, taper angle, and length within print tolerance post-machining", "Inspection plan IP-HIP-003; acceptance criteria per device drawing Rev G"]
+  - ["Electronic Traveler (DHR)", "Enforce operation sequence gate checks; capture lot/SN, operator, and tool data", "21 CFR 820.184 Device History Record; ISO 13485 7.5.3 traceability"]
+
+failures:
+  - step: "CNC Turning - OD"
+    mode: "OD out of tolerance (oversize)"
+    effect: "Implant-stem mismatch; potential intraoperative fracture or non-union - patient harm"
+    severity: 8
+    cause: "Tool wear beyond limit; incorrect offset entry; thermal expansion of Ti"
+    prevention: "Insert change interval SOP; offset verification at setup"
+    detection: "Post-op CMM inspection; SPC chart OD trend"
+  - step: "CNC Turning - Surface"
+    mode: "Surface roughness Ra > 0.8 um on taper"
+    effect: "Reduced osseointegration; long-term implant loosening - re-operation risk"
+    severity: 9
+    cause: "Worn or chipped insert; inadequate coolant flow; excessive feed rate"
+    prevention: "Profilometer check per lot; insert change per interval"
+    detection: "Profilometer measurement per part; visual inspection"
+  - step: "Workholding - Fixture"
+    mode: "Fixture slip / part shift mid-cycle"
+    effect: "Geometric error cascade (runout, perpendicularity OOS); scrap or undetected escape"
+    severity: 7
+    cause: "Improper clamping torque; fixture wear; incorrect locating pin seating"
+    prevention: "Torque spec on setup sheet; periodic fixture calibration"
+    detection: "First-article runout check; operator pre-run confirmation"
+  - step: "Coolant Delivery"
+    mode: "Coolant pressure drop / flow loss"
+    effect: "Thermal damage to Ti substrate; metallurgical alteration; implant scrapped or escaped"
+    severity: 9
+    cause: "Clogged filter; pump failure; hose leak; operator valve error"
+    prevention: "Coolant PM schedule; filter change interval"
+    detection: "Visual observation only - no automated interlock (GAP)"
+  - step: "CNC Program - Revision"
+    mode: "Wrong program revision loaded (obsolete program)"
+    effect: "Incorrect geometry machined; toolpath collision risk; patient dimension non-conformance"
+    severity: 8
+    cause: "Paper traveler allows manual program selection; no enforced program lock"
+    prevention: "Program naming convention; operator training"
+    detection: "Setup verification checklist; first-article measurement"
+  - step: "Inspection - CMM Step"
+    mode: "CMM inspection step skipped / bypassed"
+    effect: "Non-conforming part released to sterilization and distribution - direct patient risk"
+    severity: 7
+    cause: "Production schedule pressure; traveler signature forgery; inadequate gate control"
+    prevention: "Work instruction WI-CMM-002; supervisor sign-off"
+    detection: "DHR review at final release - detection is end-of-line only (GAP)"
+
+risk_note: >-
+  AIAG-VDA 2019 replaces Risk Priority Number (RPN = SxOxD) with Action Priority
+  (AP: High / Medium / Low). Rationale for medical devices: a failure with
+  Severity 9 that is NEVER detected (D=10) must be actioned immediately regardless
+  of occurrence rate - RPN arithmetic can mask this by averaging scores. AP weights
+  Detection gaps more heavily, reflecting that an undetected failure reaching a
+  patient is catastrophic. The AP lookup table (not multiplication) drives priority.
+
+ratings:
+  - ["OD out of tolerance (oversize)", 8, 4, 3]
+  - ["Surface roughness Ra > 0.8 um", 9, 3, 2]
+  - ["Fixture slip / part shift mid-cycle", 7, 3, 4]
+  - ["Coolant pressure drop / flow loss", 9, 3, 5]
+  - ["Wrong program revision loaded", 8, 2, 3]
+  - ["CMM inspection step skipped", 7, 4, 7]
+
+actions:
+  - initial_ap: H
+    mode: "Coolant pressure drop / flow loss"
+    action: >-
+      Install in-line coolant flow sensor with machine interlock: auto-feed hold +
+      alarm if PSI < 45. Validate per IQ/OQ protocol IQ-COOL-001. Update PFMEA and
+      Control Plan CP-HIP-001.
+    owner: "Process Engineer"
+    target: "2026-Q3"
+    revised: [9, 2, 2]
+  - initial_ap: H
+    mode: "Wrong program revision loaded"
+    action: >-
+      Implement electronic traveler (eDHR) with barcode-locked program selection.
+      Only approved ECO revision loads; prior revisions auto-archived. Validate per
+      21 CFR 820.70(i). Training completion rate 100% before go-live.
+    owner: "Quality Engineer + IT"
+    target: "2026-Q4"
+    revised: [8, 2, 1]
+  - initial_ap: M
+    mode: "Surface roughness Ra > 0.8 um"
+    action: >-
+      Reduce insert change interval from 150 to 100 parts; implement profilometer
+      check every 50 parts (sample basis). Update PM schedule and WI-CNC-001 Rev B.
+    owner: "Quality Engineer"
+    target: "2026-Q3"
+    revised: [9, 2, 1]
+  - initial_ap: H
+    mode: "CMM inspection step skipped"
+    action: >-
+      Add mandatory CMM gate-check in eDHR workflow: part cannot advance until CMM
+      pass record is uploaded. CMM data auto-linked to DHR lot record. Supervisor
+      override requires Level III QE approval.
+    owner: "Quality Engineer"
+    target: "2026-Q4"
+    revised: [7, 3, 2]
+
+results:
+  documents:
+    - ["Control Plan", "CP-HIP-001 Rev A", "CNC Femoral Stem - Machining Control Plan", "In Review"]
+    - ["Work Instruction", "WI-CNC-001 Rev B", "CNC Turning Setup & Operation - Ti-6Al-4V Stem", "Released"]
+    - ["Inspection Plan", "IP-HIP-003 Rev A", "CMM Dimensional Inspection - Femoral Stem", "Released"]
+    - ["IQ/OQ Protocol", "IQ-COOL-001", "Coolant Interlock System - Installation Qualification", "Pending"]
+    - ["OQ/PQ Protocol", "PQ-CNC-STEM-001", "Process Validation - CNC Machining Transfer", "Planned"]
+    - ["Risk Management", "RM-HIP-2024-01", "Device Risk Management File (ISO 14971)", "In Review"]
+    - ["DFMEA", "DFMEA-HIP-001", "Design FMEA - Cementless Femoral Stem", "Released"]
+    - ["SOP", "SOP-QE-022", "pFMEA Creation and Maintenance Procedure", "Released"]
+  archive: "[PLM System] -> Projects -> HIP-STEM-TRANSFER-2024 -> FMEA -> PFMEA-HIP-001_RevA.xlsx"

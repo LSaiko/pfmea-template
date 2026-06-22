@@ -4,23 +4,31 @@
 [![Standard: AIAG-VDA 2019](https://img.shields.io/badge/standard-AIAG--VDA%202019-darkblue)](https://www.aiag.org/)
 [![Regulatory: 21 CFR 820 | ISO 13485](https://img.shields.io/badge/regulatory-21%20CFR%20820%20%7C%20ISO%2013485-green)](https://www.fda.gov/medical-devices/quality-system-qs-regulationmedical-device-good-manufacturing-practices)
 
-A collection of production-ready Python scripts that auto-generate **complete, professionally formatted pFMEA Excel workbooks** following the **AIAG-VDA FMEA 4th Edition (2019)** 7-step methodology across three distinct medical device manufacturing scenarios.
+**🔗 Live demo & overview: [lsaiko.github.io/pfmea-template](https://lsaiko.github.io/pfmea-template/)**
 
-Built as a portfolio piece for a **Manufacturing Transfer Project Engineer** application, demonstrating:
-- Deep knowledge of AIAG-VDA 2019 vs. legacy FMEA methodology
+A **data-driven generator** that turns a plain-YAML process description into a
+**complete, professionally formatted pFMEA** following the **AIAG-VDA FMEA 4th
+Edition (2019)** 7-step methodology — exported to **Excel, Word, and PDF** from a
+single source of truth.
+
+One engine ([`pfmea.py`](pfmea.py)), many scenarios ([`scenarios/*.yaml`](scenarios)).
+Action Priority and all summary metrics are **computed**, never hand-entered, so a
+workbook can't drift out of internal consistency.
+
+- Deep knowledge of AIAG-VDA 2019 vs. legacy RPN methodology
 - Medical device regulatory fluency (21 CFR 820, ISO 13485, ISO 11607, PMA Class III)
-- Python automation for quality engineering documentation
-- GMP-compliant document formatting across diverse process types
+- Transparent, **auditable** risk logic (vs. black-box AI FMEA tools)
+- Excel + Word + PDF output; optional **ISO 14971 risk bridge**; git-diffable scenarios
 
 ---
 
 ## Samples at a Glance
 
-| # | Script | Device / Process | Classification | Key Standards |
+| # | Scenario (`scenarios/*.yaml`) | Device / Process | Classification | Key Standards |
 |---|--------|-----------------|----------------|---------------|
-| 1 | `pfmea_generator.py` | Ti-6Al-4V Femoral Stem — CNC Machining | Class III PMA | 21 CFR 820, ISO 13485 |
-| 2 | `pfmea_generator_spinal.py` | PEEK Lumbar Interbody Cage — Injection Molding | Class II 510(k) | 21 CFR 820, ASTM F2026 |
-| 3 | `pfmea_generator_packaging.py` | Sterile Barrier Packaging — Tyvek-Film Heat Sealing | Class III support | ISO 11607-1, 21 CFR 820 |
+| 1 | `cnc_femoral_stem` | Ti-6Al-4V Femoral Stem — CNC Machining | Class III PMA | 21 CFR 820, ISO 13485 |
+| 2 | `spinal_peek_cage` | PEEK Lumbar Interbody Cage — Injection Molding | Class II 510(k) | 21 CFR 820, ASTM F2026 |
+| 3 | `sterile_packaging` | Sterile Barrier Packaging — Tyvek-Film Heat Sealing | Class III support | ISO 11607-1, 21 CFR 820 |
 
 ---
 
@@ -36,24 +44,28 @@ Each generated workbook contains the same 7 sheets, populated with scenario-spec
 | **4. Failure Analysis** | Step 4 | 6 failure modes with effects, severity, causes, controls |
 | **5. Risk Rating** | Step 5 | AIAG-VDA Action Priority (AP) — NOT legacy RPN |
 | **6. Optimization** | Step 6 | 4 corrective actions with owners, dates, revised AP |
-| **7. Results Summary** | Step 7 | Metrics, linked documents, archive location |
+| **7. Results Summary** | Step 7 | **Auto-computed** metrics, linked documents, archive location |
+| *8. ISO 14971 Bridge* | *optional* | *Maps each failure to Hazard / Hazardous Situation / Harm / P1 / P2 (`--iso14971`)* |
 
 ---
 
 ## AIAG-VDA 2019 Key Differentiator: Action Priority vs. RPN
 
-All three scripts implement the **correct AP lookup table**, not RPN multiplication (`S x O x D`).
+Uses **Action Priority (H/M/L)**, not legacy RPN multiplication (`S x O x D`), with
+detection-weighted patient-safety logic:
 
 ```
-AP Logic (patient-safety weighting):
-  S 9-10 + D 7-10              -> H  (regardless of O)
-  S 9-10 + D 4-6 + O >= 4     -> H
-  S 9-10 + D 4-6 + O < 4      -> M
-  S 7-8  + D 7-10 + O >= 4    -> H
-  All others                   -> M or L
+S 9-10 + D 7-10            -> H   (undetected critical failure, any O)
+S 9-10 + D 4-6 + O >= 4    -> H
+S 7-8  + D 7-10 + O >= 4   -> H
+All others                  -> M or L
 ```
 
-**Why it matters for medical devices:** An undetected failure reaching a patient is catastrophic regardless of occurrence rate. AP weights Detection gaps more heavily than RPN arithmetic does.
+**Why it matters:** an undetected failure reaching a patient is catastrophic
+regardless of occurrence rate; AP weights Detection gaps more heavily than RPN.
+The logic is one readable, **auditable** function — not a black-box model — and is
+a documented simplification of the full handbook table. See
+[`docs/ap-logic.md`](docs/ap-logic.md).
 
 ---
 
@@ -65,28 +77,67 @@ git clone https://github.com/LSaiko/pfmea-template.git
 cd pfmea-template
 ```
 
-### 2. Install dependencies
+### 2. Install
+
 ```bash
+# Option A — install as a command (recommended; works from any directory)
+pip install .            # adds the `pfmea` command + bundles the sample scenarios
+# add formats:  pip install ".[docs]"   (Word/PDF)    or   pip install ".[all]"
+
+# Option B — just run from the repo, no install
 pip install -r requirements.txt
 ```
+
+After Option A you can run `pfmea ...` anywhere; with Option B use `python pfmea.py ...`.
 
 ### 3. Generate a workbook
 
 ```bash
-# Sample 1 — CNC Femoral Stem (Class III PMA)
-python pfmea_generator.py
+# List available scenarios
+python pfmea.py list
+
+# Scaffold a brand-new scenario, then validate it
+python pfmea.py new my_process       # writes scenarios/my_process.yaml
+python pfmea.py check my_process     # validates S/O/D ranges + required fields
+
+# Generate Excel (default)
+python pfmea.py generate cnc_femoral_stem
 # Output: pfmea_aiag_vda_2019.xlsx
 
-# Sample 2 — PEEK Spinal Cage (Class II 510k)
-python pfmea_generator_spinal.py
-# Output: pfmea_spinal_peek_cage.xlsx
+# Generate Excel + Word + PDF, plus the ISO 14971 bridge sheet
+python pfmea.py generate sterile_packaging --format all --iso14971
 
-# Sample 3 — Sterile Packaging (ISO 11607)
-python pfmea_generator_packaging.py
-# Output: pfmea_sterile_packaging.xlsx
+# Custom output basename
+python pfmea.py generate spinal_peek_cage -o out/my_pfmea
 
-# Custom output path (any script):
-python pfmea_generator.py /path/to/my_pfmea.xlsx
+# Diff two scenario revisions into an auditable change summary
+python pfmea.py changelog --from old.yaml --to scenarios/cnc_femoral_stem.yaml
+```
+
+Add your own scenario by copying any file in [`scenarios/`](scenarios) and editing
+the YAML — no Python required.
+
+### 4. Standalone Word / PDF export
+
+`export.py` also works directly on any existing workbook (the same renderer the
+`--format` flag uses):
+
+```bash
+python export.py pfmea_aiag_vda_2019.xlsx                 # -> .docx and .pdf
+python export.py pfmea_aiag_vda_2019.xlsx --format pdf    # -> .pdf only
+python export.py pfmea_aiag_vda_2019.xlsx -o report       # custom basename
+```
+
+### 5. (Optional) Draft a new scenario from plain English — fully offline
+
+With a local model runtime (e.g. [Ollama](https://ollama.com)) and the `llm` extra,
+`draft` turns a one-line process description into a starter scenario YAML for you to
+review. No cloud, no account — see [docs/llm-coldstart.md](docs/llm-coldstart.md).
+
+```bash
+pip install ".[llm]"
+python pfmea.py draft tyvek_seal --describe "heat-sealing Tyvek pouches for sterile implants"
+# -> scenarios/tyvek_seal.yaml  (DRAFT — every S/O/D needs engineer review)
 ```
 
 ---
@@ -94,9 +145,8 @@ python pfmea_generator.py /path/to/my_pfmea.xlsx
 ## Requirements
 
 - Python 3.9+
-- `openpyxl >= 3.1.2`
-
-No other dependencies.
+- `openpyxl >= 3.1.2`, `PyYAML >= 6.0`
+- Optional (Word/PDF export only): `python-docx`, `reportlab`
 
 ---
 
@@ -107,11 +157,11 @@ No other dependencies.
 
 | # | Failure Mode | S | O | D | Initial AP | After Action |
 |---|---|---|---|---|---|---|
-| 1 | OD out of tolerance (oversize) | 8 | 4 | 3 | M | M |
-| 2 | Surface roughness Ra > 0.8 um | 9 | 3 | 2 | M | L |
-| 3 | Fixture slip / part shift | 7 | 3 | 4 | M | M |
-| 4 | Coolant pressure drop / flow loss | 9 | 3 | 5 | **H** | L |
-| 5 | Wrong program revision loaded | 8 | 2 | 3 | M | L |
+| 1 | OD out of tolerance (oversize) | 8 | 4 | 3 | L | L |
+| 2 | Surface roughness Ra > 0.8 um | 9 | 3 | 2 | M | M |
+| 3 | Fixture slip / part shift | 7 | 3 | 4 | L | L |
+| 4 | Coolant pressure drop / flow loss | 9 | 3 | 5 | M | M |
+| 5 | Wrong program revision loaded | 8 | 2 | 3 | L | L |
 | 6 | CMM inspection step skipped | 7 | 4 | 7 | **H** | L |
 
 **Corrective Actions:**
@@ -170,34 +220,42 @@ No other dependencies.
 
 ```
 pfmea-template/
-├── pfmea_generator.py              # Sample 1: CNC Ti-6Al-4V Femoral Stem (Class III)
-├── pfmea_generator_spinal.py       # Sample 2: Injection Molding PEEK Spinal Cage (Class II)
-├── pfmea_generator_packaging.py    # Sample 3: Sterile Barrier Packaging (ISO 11607)
-├── pfmea_aiag_vda_2019.xlsx        # Pre-generated output — Sample 1
-├── pfmea_spinal_peek_cage.xlsx     # Pre-generated output — Sample 2
-├── pfmea_sterile_packaging.xlsx    # Pre-generated output — Sample 3
-├── requirements.txt                # openpyxl dependency
-└── README.md                       # This file
+├── pfmea.py                        # The engine + CLI (list/new/check/draft/generate/changelog)
+├── export.py                       # Word (.docx) + PDF renderer (also standalone)
+├── llm.py                          # Optional offline LLM cold-start (used by `draft`)
+├── pyproject.toml                  # Packaging — `pip install .` adds the `pfmea` command
+├── test_pfmea.py / test_llm.py     # Self-checks (python test_pfmea.py)
+├── scenarios/
+│   ├── cnc_femoral_stem.yaml       # Sample 1: CNC Ti-6Al-4V Femoral Stem (Class III)
+│   ├── spinal_peek_cage.yaml       # Sample 2: PEEK Injection Molded Spinal Cage (Class II)
+│   └── sterile_packaging.yaml      # Sample 3: Sterile Barrier Packaging (ISO 11607)
+├── docs/
+│   ├── index.html                  # Landing page (GitHub Pages)
+│   ├── ap-logic.md                 # Action Priority logic + scope
+│   └── llm-coldstart.md            # Design spec: optional offline LLM drafting
+├── pfmea_*.xlsx / .docx / .pdf     # Pre-generated sample outputs (3 scenarios x 3 formats)
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## Portfolio Context
+## Contributing
 
-This project demonstrates competencies directly relevant to a **Manufacturing Transfer Project Engineer** role at a medical device company:
+Built by one developer and an AI pair-programmer — collaborators welcome. The
+scenario library is meant to grow: add a `scenarios/*.yaml` (start with
+`pfmea new <name>`, validate with `pfmea check <name>`) and open a PR. Bug fixes,
+new process scenarios, and renderer improvements are all fair game.
 
-- **FMEA methodology:** AIAG-VDA 2019 AP table implementation across three process types (machining, molding, packaging)
-- **Regulatory breadth:** 21 CFR 820.70(i) software control, ISO 13485 §7.5.3 traceability, 21 CFR 820.184 DHR, ISO 11607-1 sterile barrier, 21 CFR 830 UDI
-- **Process knowledge:** Ti-6Al-4V CNC machining, PEEK injection molding, Tyvek-film heat sealing, EtO sterilization, CMM, SPC
-- **Documentation:** GMP-compliant formatting, linked document control, archive conventions
-- **Python automation:** Clean, self-contained scripts deployable in a quality engineering context
+> Preliminary engineering tool. Generated pFMEAs are a starting point — a qualified
+> quality engineer must review and approve them before any regulatory use.
 
 ---
 
 ## License
 
-MIT License — free to use, modify, and adapt for your own quality engineering projects.
+MIT License — free to use, modify, and adapt.
 
 ---
 
-*Built with Python + openpyxl | AIAG-VDA FMEA 4th Edition 2019 | 21 CFR 820 | ISO 13485 | ISO 11607*
+*Built with Python | AIAG-VDA FMEA 4th Edition 2019 | 21 CFR 820 | ISO 13485 | ISO 11607*

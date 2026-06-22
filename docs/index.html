@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pFMEA Generator — AIAG-VDA 2019</title>
+<style>
+  :root{
+    --navy:#1F3864; --navy2:#2b4a82; --gold:#D4AF37;
+    --red:#C00000; --amber:#FFC000; --green:#92D050;
+    --ink:#1a2233; --muted:#5b6573; --line:#e3e7ee; --bg:#f6f8fb; --card:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink);background:var(--bg);line-height:1.55}
+  a{color:var(--navy2)}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+  header{background:linear-gradient(135deg,var(--navy),#16284a);color:#fff;padding:64px 0 56px}
+  header .tag{display:inline-block;border:1px solid var(--gold);color:var(--gold);
+       border-radius:20px;padding:4px 14px;font-size:13px;letter-spacing:.04em;margin-bottom:18px}
+  header h1{margin:0 0 12px;font-size:40px;line-height:1.1}
+  header p{margin:0;max-width:680px;font-size:18px;color:#cdd6e6}
+  .cta{margin-top:26px}
+  .btn{display:inline-block;background:var(--gold);color:#22324f;font-weight:700;
+       text-decoration:none;padding:11px 20px;border-radius:8px;margin-right:10px}
+  .btn.ghost{background:transparent;color:#fff;border:1px solid #7f93ba}
+  section{padding:48px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:26px;margin:0 0 6px}
+  .sub{color:var(--muted);margin:0 0 26px}
+  /* flow */
+  .flow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .node{background:var(--card);border:1px solid var(--line);border-radius:10px;
+        padding:16px 18px;min-width:150px;box-shadow:0 1px 2px rgba(20,40,80,.04)}
+  .node b{display:block;font-size:15px}
+  .node span{font-size:13px;color:var(--muted)}
+  .arrow{color:var(--gold);font-size:26px;font-weight:700}
+  .fan{display:flex;flex-direction:column;gap:8px}
+  .pill{background:#eef2f9;border:1px solid var(--line);border-radius:7px;padding:7px 12px;font-size:13px}
+  /* differentiators */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+  .feat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .feat h3{margin:0 0 6px;font-size:16px}
+  .feat p{margin:0;color:var(--muted);font-size:14px}
+  .feat .dot{color:var(--gold);font-weight:800}
+  /* samples */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .card .top{background:var(--navy);color:#fff;padding:14px 16px}
+  .card .top b{font-size:16px}
+  .card .top span{display:block;font-size:12px;color:#b9c6de;margin-top:2px}
+  .card .body{padding:14px 16px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600}
+  td.c,th.c{text-align:center}
+  .ap{font-weight:800;border-radius:5px;padding:2px 8px;color:#22324f}
+  .H{background:var(--red);color:#fff}
+  .M{background:var(--amber)}
+  .L{background:var(--green)}
+  .out{font-size:12px;color:var(--muted);margin-top:10px}
+  .out b{color:var(--ink)}
+  code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+  pre{background:#0f1d36;color:#e6edf7;padding:18px;border-radius:10px;overflow:auto;font-size:13px}
+  .cmt{color:#8fa6cf}
+  footer{padding:34px 0;color:var(--muted);font-size:13px}
+  .legend span{display:inline-block;margin-right:14px;font-size:12px;color:var(--muted)}
+  .legend .ap{font-size:11px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="tag">AIAG-VDA FMEA 4th Edition (2019) · ISO 13485 · 21 CFR 820</div>
+    <h1>pFMEA Generator</h1>
+    <p>Turn a plain-YAML process description into a complete, auditable Process FMEA —
+       exported to <b>Excel, Word, and PDF</b> from a single source of truth.
+       Action Priority and every summary metric are <b>computed, never hand-entered.</b></p>
+    <div class="cta">
+      <a class="btn" href="https://github.com/LSaiko/pfmea-template">View on GitHub</a>
+      <a class="btn ghost" href="#start">Quick start</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="sub">One engine, many scenarios. Edit YAML — no Python required.</p>
+    <div class="flow">
+      <div class="node"><b>scenario.yaml</b><span>scope · failures · S/O/D · actions</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>pfmea.py</b><span>computes Action Priority<br>+ summary metrics</span></div>
+      <div class="arrow">→</div>
+      <div class="fan">
+        <div class="pill">📊 Excel workbook (7 steps)</div>
+        <div class="pill">📝 Word (.docx)</div>
+        <div class="pill">📄 PDF</div>
+        <div class="pill">🩺 ISO 14971 bridge <span style="color:#8a93a3">(--iso14971)</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Why it's different</h2>
+    <p class="sub">What every commercial and AI competitor is missing.</p>
+    <div class="grid">
+      <div class="feat"><h3><span class="dot">›</span> Free &amp; open</h3><p>No $1.2k–$10k/seat licenses. MIT-licensed, runs offline, no account.</p></div>
+      <div class="feat"><h3><span class="dot">›</span> Auditable, not black-box</h3><p>AP is one readable function — reproducible for any FDA/notified-body auditor. AI tools can't answer "why this score?"</p></div>
+      <div class="feat"><h3><span class="dot">›</span> Excel + Word + PDF</h3><p>One command, three formats. Competitors ship Excel only.</p></div>
+      <div class="feat"><h3><span class="dot">›</span> ISO 14971 bridge</h3><p>Maps pFMEA → Hazard / Harm / P1 / P2. The gap no tool fills: AIAG-VDA <i>and</i> medical risk.</p></div>
+      <div class="feat"><h3><span class="dot">›</span> Git-diffable</h3><p>YAML scenarios + a <code>changelog</code> command = auditable revision history for AIAG-VDA Step 7.</p></div>
+      <div class="feat"><h3><span class="dot">›</span> Self-consistent</h3><p>Metrics computed from the same AP call that fills the risk sheet — they can't drift.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Samples at a glance</h2>
+    <p class="sub">Three medical-device manufacturing scenarios. Action Priority shown is exactly what the engine computes.</p>
+    <div class="legend" style="margin-bottom:14px">
+      <span><b>AP:</b></span>
+      <span class="ap H">H</span> High &nbsp;
+      <span class="ap M">M</span> Medium &nbsp;
+      <span class="ap L">L</span> Low
+    </div>
+    <div class="cards">
+
+      <div class="card">
+        <div class="top"><b>① CNC Femoral Stem</b><span>Ti-6Al-4V machining · Class III PMA</span></div>
+        <div class="body">
+          <table>
+            <tr><th>Failure mode</th><th class="c">S</th><th class="c">O</th><th class="c">D</th><th class="c">AP</th></tr>
+            <tr><td>OD out of tolerance</td><td class="c">8</td><td class="c">4</td><td class="c">3</td><td class="c"><span class="ap L">L</span></td></tr>
+            <tr><td>Surface roughness Ra&gt;0.8µm</td><td class="c">9</td><td class="c">3</td><td class="c">2</td><td class="c"><span class="ap M">M</span></td></tr>
+            <tr><td>Fixture slip mid-cycle</td><td class="c">7</td><td class="c">3</td><td class="c">4</td><td class="c"><span class="ap L">L</span></td></tr>
+            <tr><td>Coolant pressure drop</td><td class="c">9</td><td class="c">3</td><td class="c">5</td><td class="c"><span class="ap M">M</span></td></tr>
+            <tr><td>Wrong program revision</td><td class="c">8</td><td class="c">2</td><td class="c">3</td><td class="c"><span class="ap L">L</span></td></tr>
+            <tr><td>CMM step skipped</td><td class="c">7</td><td class="c">4</td><td class="c">7</td><td class="c"><span class="ap H">H</span></td></tr>
+          </table>
+          <div class="out"><b>Output:</b> pfmea_aiag_vda_2019.<b>xlsx · docx · pdf</b></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="top"><b>② PEEK Spinal Cage</b><span>Injection molding · Class II 510(k)</span></div>
+        <div class="body">
+          <table>
+            <tr><th>Failure mode</th><th class="c">S</th><th class="c">O</th><th class="c">D</th><th class="c">AP</th></tr>
+            <tr><td>Flash / fin at parting line</td><td class="c">6</td><td class="c">4</td><td class="c">3</td><td class="c"><span class="ap L">L</span></td></tr>
+            <tr><td>Footprint / height OOS</td><td class="c">8</td><td class="c">4</td><td class="c">5</td><td class="c"><span class="ap M">M</span></td></tr>
+            <tr><td>Wrong PEEK grade loaded</td><td class="c">9</td><td class="c">3</td><td class="c">7</td><td class="c"><span class="ap H">H</span></td></tr>
+            <tr><td>Short shot / incomplete fill</td><td class="c">7</td><td class="c">3</td><td class="c">2</td><td class="c"><span class="ap L">L</span></td></tr>
+            <tr><td>Gate vestige &gt;0.3mm</td><td class="c">7</td><td class="c">4</td><td class="c">4</td><td class="c"><span class="ap M">M</span></td></tr>
+            <tr><td>Endplate texture OOS</td><td class="c">8</td><td class="c">5</td><td class="c">7</td><td class="c"><span class="ap H">H</span></td></tr>
+          </table>
+          <div class="out"><b>Output:</b> pfmea_spinal_peek_cage.<b>xlsx · docx · pdf</b></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="top"><b>③ Sterile Packaging</b><span>Tyvek-film heat seal · ISO 11607-1</span></div>
+        <div class="body">
+          <table>
+            <tr><th>Failure mode</th><th class="c">S</th><th class="c">O</th><th class="c">D</th><th class="c">AP</th></tr>
+            <tr><td>Channel seal defect</td><td class="c">9</td><td class="c">4</td><td class="c">6</td><td class="c"><span class="ap H">H</span></td></tr>
+            <tr><td>Pinhole / micro-leak</td><td class="c">10</td><td class="c">2</td><td class="c">8</td><td class="c"><span class="ap H">H</span></td></tr>
+            <tr><td>Seal temp out of range</td><td class="c">8</td><td class="c">4</td><td class="c">5</td><td class="c"><span class="ap M">M</span></td></tr>
+            <tr><td>Incorrect dwell time</td><td class="c">8</td><td class="c">3</td><td class="c">3</td><td class="c"><span class="ap L">L</span></td></tr>
+            <tr><td>UDI label mismatch</td><td class="c">8</td><td class="c">2</td><td class="c">4</td><td class="c"><span class="ap L">L</span></td></tr>
+            <tr><td>Breach during EtO/transit</td><td class="c">9</td><td class="c">3</td><td class="c">5</td><td class="c"><span class="ap M">M</span></td></tr>
+          </table>
+          <div class="out"><b>Output:</b> pfmea_sterile_packaging.<b>xlsx · docx · pdf</b></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <h2>Quick start</h2>
+    <p class="sub">From clone to a three-format pFMEA in four lines.</p>
+<pre>git clone https://github.com/LSaiko/pfmea-template.git &amp;&amp; cd pfmea-template
+pip install -r requirements.txt
+
+python pfmea.py list                                          <span class="cmt"># see scenarios</span>
+python pfmea.py generate sterile_packaging --format all --iso14971
+<span class="cmt"># -> pfmea_sterile_packaging.xlsx / .docx / .pdf  (+ ISO 14971 bridge sheet)</span>
+
+python pfmea.py changelog --from old.yaml --to scenarios/cnc_femoral_stem.yaml</pre>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    pFMEA Generator · AIAG-VDA 2019 · MIT License ·
+    <a href="https://github.com/LSaiko/pfmea-template">github.com/LSaiko/pfmea-template</a><br>
+    Preliminary engineering tool — human review required before any regulatory use.
+  </div>
+</footer>
+
+</body>
+</html>
